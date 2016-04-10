@@ -24,12 +24,10 @@ RUN export LANG=C.UTF-8 && \
     pip install supervisor && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pecl install mongodb
-echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 #Install ZSH
-RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-chsh -s `which zsh`
+RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh && chsh -s `which zsh`
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
