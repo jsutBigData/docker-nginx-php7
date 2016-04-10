@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update
-RUN apt-get -y upgrade
+RUN apt-get -y dist-upgrade
 
 # Install openssh server
 RUN apt-get install -y openssh-server
@@ -27,7 +27,10 @@ RUN export LANG=C.UTF-8 && \
 RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 #Install ZSH
-RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh && chsh -s `which zsh`
+RUN /bin/bash -c 'git clone https://github.com/robbyrussell/oh-my-zsh.git /home/root/.oh-my-zsh && \
+    cp /home/root/.oh-my-zsh/templates/zshrc.zsh-template /home/root/.zshrc && \
+    sed -i "s|# DISABLE_AUTO_UPDATE|DISABLE_AUTO_UPDATE|g" /home/root/.zshrc && \
+    sudo chsh -s /bin/zsh root'
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
