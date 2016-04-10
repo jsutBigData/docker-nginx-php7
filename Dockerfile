@@ -11,8 +11,6 @@ RUN mkdir /var/run/sshd
 RUN echo 'root:123456a' |chpasswd
 RUN echo 'PermitRootLogin yes' > /etc/ssh/sshd_config
 
-CMD ["/usr/sbin/sshd", "-D"]
-
 RUN export LANG=C.UTF-8 && \
 apt-get install -y software-properties-common && \
 add-apt-repository -y ppa:nginx/stable && \
