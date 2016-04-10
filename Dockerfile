@@ -12,20 +12,24 @@ RUN echo 'root:123456a' |chpasswd
 RUN echo 'PermitRootLogin yes' > /etc/ssh/sshd_config
 
 RUN export LANG=C.UTF-8 && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository -y ppa:nginx/stable && \
-    LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y && \
-    apt-get update
+apt-get install -y software-properties-common && \
+add-apt-repository -y ppa:nginx/stable && \
+LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y && \
+apt-get update
 
 RUN export LANG=C.UTF-8 && \
-    apt-get install -y nginx php7.0-fpm python-pip git vim zip && \
-    apt-get install -y php7.0-mysql php7.0-mcrypt php7.0-intl php7.0-curl php7.0-gd \
+    apt-get install -y nginx php7.0-fpm python-pip git vim zip zsh wget && \
+    apt-get install -y php7.0-dev php7.0-mysql php7.0-mcrypt php7.0-intl php7.0-curl php7.0-gd \
     php7.0-zip php7.0-mbstring php7.0-dom php7.0-odbc php-redis php-pear && \
     pip install supervisor && \
     rm -rf /var/lib/apt/lists/*
 
-#RUN pecl install mongodb
-#echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+RUN pecl install mongodb
+echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
+#Install ZSH
+RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
+chsh -s `which zsh`
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
