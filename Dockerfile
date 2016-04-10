@@ -1,5 +1,16 @@
 FROM ubuntu:latest
 
+RUN apt-get update
+RUN apt-get -y upgrade
+
+# Install openssh server
+RUN apt-get install -y openssh-server
+
+# Configure openssh server
+RUN mkdir /var/run/sshd
+RUN echo 'root:123456a' |chpasswd
+RUN echo 'PermitRootLogin yes' > /etc/ssh/sshd_config
+
 RUN export LANG=C.UTF-8 && \
     apt-get install -y software-properties-common && \
     add-apt-repository -y ppa:nginx/stable && \
@@ -7,10 +18,14 @@ RUN export LANG=C.UTF-8 && \
     apt-get update
 
 RUN export LANG=C.UTF-8 && \
-    apt-get install -y nginx php7.0-fpm python-pip git vim nano zip && \
-    apt-get install -y php7.0-pgsql php7.0-mcrypt php7.0-intl php7.0-curl php7.0-gd php7.0-zip php7.0-mbstring php7.0-dom && \
+    apt-get install -y nginx php7.0-fpm python-pip git vim zip && \
+    apt-get install -y php7.0-mysql php7.0-mcrypt php7.0-intl php7.0-curl php7.0-gd \
+    php7.0-zip php7.0-mbstring php7.0-dom php7.0-odbc php-redis php-pecl && \
     pip install supervisor && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pecl install mongodb
+echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
@@ -32,3 +47,4 @@ CMD supervisord -c /etc/supervisord.conf
 # Expose ports.
 EXPOSE 80
 EXPOSE 443
+EXPOSE 22
