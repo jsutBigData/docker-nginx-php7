@@ -20,9 +20,10 @@ apt-get update
 RUN export LANG=C.UTF-8 && \
     apt-get install -y nginx php7.0-fpm python-pip git vim zip zsh wget && \
     apt-get install -y php7.0-dev php7.0-mysql php7.0-mcrypt php7.0-intl php7.0-curl php7.0-gd \
-    php7.0-zip php7.0-mbstring php7.0-dom php7.0-odbc php-redis php-pear && \
+    php7.0-zip php7.0-mbstring php7.0-dom php7.0-odbc php-redis php-pear pkg-config libssl-dev libsslcommon2-dev && \
     pip install supervisor && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp
 
 RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
