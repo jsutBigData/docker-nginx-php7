@@ -25,7 +25,7 @@ RUN export LANG=C.UTF-8 && \
     php7.0-zip php7.0-mbstring php7.0-dom php7.0-odbc php-redis php-pear pkg-config libssl-dev libsslcommon2-dev && \
     pip install supervisor && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /tmp
+    rm -rf /tmp/*
 
 #RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
