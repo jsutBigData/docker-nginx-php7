@@ -1,5 +1,7 @@
 FROM ubuntu:latest
 
+RUN sed -i "s|archive.ubuntu.com|mirrors.aliyun.com|g" /etc/apt/sources.list
+
 RUN apt-get update
 RUN apt-get -y dist-upgrade
 
@@ -25,7 +27,7 @@ RUN export LANG=C.UTF-8 && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp
 
-RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+#RUN pecl install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 #Install ZSH
 RUN /bin/bash -c 'git clone https://github.com/robbyrussell/oh-my-zsh.git /home/root/.oh-my-zsh && \
@@ -51,6 +53,4 @@ RUN mkdir /run/php && chown www-data:www-data /run/php
 CMD supervisord -c /etc/supervisord.conf
 
 # Expose ports.
-EXPOSE 80
-EXPOSE 443
-EXPOSE 22
+EXPOSE 80  443 22
